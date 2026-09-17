@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #f8fafc;
+    color: #0f172a;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+/* Print styling specifically tailored for the Cambridge Lesson Plan Sheet */
+@media print {
+  body {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .lesson-plan-container {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .template-table {
+    border-collapse: collapse !important;
+    width: 100% !important;
+  }
+
+  .template-table th, 
+  .template-table td {
+    border: 1px solid #000000 !important;
+    padding: 6px 8px !important;
+  }
+
+  .page-break-before {
+    page-break-before: always;
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "STEAM Lesson Plan Generator",
+  "description": "Curriculum-aligned STEAM lesson plan generator for Grade 8 Science & Technology with textbook context, official LOs, and strict Cambridge template adherence.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
