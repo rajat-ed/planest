@@ -38,7 +38,6 @@ The **STEAM Lesson Plan Generator** is a full-stack educational engineering plat
 6. [Installation & Setup](#6-installation--setup)
 7. [API Reference](#7-api-reference)
 8. [Classroom Feasibility & Ethical Safeguards](#8-classroom-feasibility--ethical-safeguards)
-9. [Citation & License](#9-citation--license)
 
 ---
 
