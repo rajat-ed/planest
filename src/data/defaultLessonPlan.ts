@@ -2,7 +2,7 @@ import { CambridgeLessonPlan } from '../types';
 
 export const DEFAULT_GRADE_8_LESSON_PLAN: CambridgeLessonPlan = {
   id: 'plan-default-unit3-cells',
-  classGrade: 'Grade 8 (Section A & B)',
+  classGrade: 'Grade 8',
   date: new Date().toISOString().split('T')[0],
   unitNumber: 3,
   unitTitle: 'Unit 3: Living Beings and Their Structure',

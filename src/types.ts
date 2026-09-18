@@ -37,7 +37,7 @@ export interface CurriculumUnit {
 export interface CambridgeLessonPlan {
   id: string;
   classGrade: string;
-  date: string;
+  date?: string;
   unitNumber: number;
   unitTitle: string;
   topic: string;

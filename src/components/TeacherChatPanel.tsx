@@ -175,19 +175,19 @@ export const TeacherChatPanel: React.FC<TeacherChatPanelProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-xs border border-slate-200 flex flex-col h-[650px] lg:h-[750px] overflow-hidden">
-      {/* Chat Header */}
-      <div className="p-3.5 border-b border-slate-200 bg-slate-50 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 text-white flex items-center justify-center font-bold">
+    <div className="bg-transparent flex flex-col h-[650px] lg:h-[750px] overflow-hidden">
+      {/* Chat Sub-header */}
+      <div className="p-3.5 border-b border-black/[0.06] bg-white rounded-2xl shadow-[0_1px_3px_rgba(0,0,0,0.03),0_6px_20px_rgba(0,0,0,0.04)] border border-black/[0.05] flex items-center justify-between mb-3 shrink-0">
+        <div className="flex items-center gap-2.5">
+          <div className="w-8 h-8 rounded-full bg-[#0071e3]/10 text-[#0071e3] flex items-center justify-center font-bold">
             <Bot className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-xs sm:text-sm font-bold text-slate-900 leading-none">
-              STEAM Curriculum Assistant
+            <h3 className="text-[13px] font-semibold text-[#1d1d1f] leading-tight">
+              Curriculum AI Specialist
             </h3>
-            <span className="text-[11px] text-slate-500">
-              Textbook-grounded • Cambridge Template
+            <span className="text-[11px] text-[#86868b]">
+              Textbook-grounded • Nepal CDC & Cambridge
             </span>
           </div>
         </div>
@@ -195,44 +195,44 @@ export const TeacherChatPanel: React.FC<TeacherChatPanelProps> = ({
         <button
           type="button"
           onClick={onOpenSelector}
-          className="text-xs font-semibold text-blue-600 hover:text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-200 transition-colors inline-flex items-center gap-1"
+          className="text-[12px] font-medium text-[#0071e3] hover:bg-[#0071e3]/5 bg-transparent px-2.5 py-1 rounded-full border border-[#0071e3]/20 transition-all inline-flex items-center gap-1 cursor-pointer active:scale-[0.98]"
         >
           <Wand2 className="w-3.5 h-3.5" />
-          <span>Browse 11 Units</span>
+          <span>All Units</span>
         </button>
       </div>
 
       {/* Messages Thread */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 text-xs sm:text-sm">
+      <div className="flex-1 overflow-y-auto space-y-3.5 text-[13px] pr-1">
         {messages.map((m) => (
           <div
             key={m.id}
             className={`flex items-start gap-2.5 ${m.role === 'user' ? 'flex-row-reverse' : ''}`}
           >
             <div
-              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${
+              className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 mt-0.5 ${
                 m.role === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-indigo-100 text-indigo-700 border border-indigo-200'
+                  ? 'bg-[#0071e3] text-white'
+                  : 'bg-white text-[#0071e3] border border-black/[0.06] shadow-2xs'
               }`}
             >
               {m.role === 'user' ? <User className="w-3.5 h-3.5" /> : <Bot className="w-3.5 h-3.5" />}
             </div>
 
             <div
-              className={`max-w-[85%] rounded-xl p-3 shadow-2xs whitespace-pre-wrap leading-relaxed ${
+              className={`max-w-[85%] rounded-2xl p-3.5 leading-relaxed whitespace-pre-wrap ${
                 m.role === 'user'
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-slate-50 text-slate-800 border border-slate-200'
+                  ? 'bg-[#0071e3] text-white shadow-[0_2px_8px_rgba(0,113,227,0.25)] rounded-tr-sm'
+                  : 'bg-white text-[#1d1d1f] shadow-[0_1px_3px_rgba(0,0,0,0.03),0_6px_20px_rgba(0,0,0,0.04)] border border-black/[0.05] rounded-tl-sm'
               }`}
             >
               <p>{m.content}</p>
 
               {/* Quick Prompt Chips */}
               {m.suggestedPrompts && m.suggestedPrompts.length > 0 && (
-                <div className="mt-3 pt-2.5 border-t border-slate-200/80 flex flex-wrap gap-1.5">
-                  <span className="text-[10px] uppercase font-bold text-slate-400 block w-full mb-0.5">
-                    Quick Chapter Selections:
+                <div className="mt-3 pt-3 border-t border-black/[0.06] flex flex-wrap gap-1.5">
+                  <span className="text-[10px] uppercase font-semibold text-[#86868b] block w-full mb-0.5 tracking-wider">
+                    Quick Suggestions:
                   </span>
                   {m.suggestedPrompts.map((sPrompt, sIdx) => (
                     <button
@@ -240,7 +240,7 @@ export const TeacherChatPanel: React.FC<TeacherChatPanelProps> = ({
                       type="button"
                       onClick={() => handleSendMessage(sPrompt)}
                       disabled={loading}
-                      className="text-left text-[11px] bg-white hover:bg-blue-50 text-blue-700 font-medium px-2 py-1 rounded-md border border-blue-200 shadow-2xs transition-all hover:border-blue-400"
+                      className="text-left text-[11px] bg-[#f5f5f7] hover:bg-white text-[#1d1d1f] font-medium px-2.5 py-1 rounded-full border border-black/[0.06] shadow-2xs transition-all cursor-pointer active:scale-[0.98]"
                     >
                       {sPrompt}
                     </button>
@@ -253,12 +253,12 @@ export const TeacherChatPanel: React.FC<TeacherChatPanelProps> = ({
 
         {loading && (
           <div className="flex items-start gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 flex items-center justify-center shrink-0 animate-pulse">
-              <Sparkles className="w-3.5 h-3.5" />
+            <div className="w-7 h-7 rounded-full bg-[#0071e3]/10 text-[#0071e3] flex items-center justify-center shrink-0">
+              <Sparkles className="w-3.5 h-3.5 animate-pulse" />
             </div>
-            <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs text-slate-600 flex items-center gap-2">
-              <RefreshCw className="w-3.5 h-3.5 animate-spin text-blue-600" />
-              <span>Designing lesson plan with textbook context and official LOs...</span>
+            <div className="bg-white border border-black/[0.05] rounded-2xl rounded-tl-sm p-3.5 text-[12px] text-[#6e6e73] flex items-center gap-2.5 shadow-2xs">
+              <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#0071e3]" />
+              <span>Synthesizing CDC textbook context and Cambridge template...</span>
             </div>
           </div>
         )}
@@ -266,14 +266,14 @@ export const TeacherChatPanel: React.FC<TeacherChatPanelProps> = ({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input Bar */}
-      <div className="p-3 border-t border-slate-200 bg-white">
+      {/* Input Bar: Apple Pill Style */}
+      <div className="pt-3 shrink-0">
         <form
           onSubmit={(e) => {
             e.preventDefault();
             handleSendMessage();
           }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-2 bg-white rounded-full border border-black/[0.1] shadow-[0_2px_8px_rgba(0,0,0,0.04)] pl-4 pr-1.5 py-1.5 focus-within:ring-2 focus-within:ring-[#0071e3]/30 focus-within:border-[#0071e3] transition-all"
         >
           <input
             id="input-teacher-chat"
@@ -281,17 +281,17 @@ export const TeacherChatPanel: React.FC<TeacherChatPanelProps> = ({
             value={input}
             onChange={(e) => setInput(e.target.value)}
             disabled={loading}
-            placeholder="e.g. Plan Unit 6 Levers for 45 mins using ruler & coins..."
-            className="flex-1 px-3 py-2 text-xs sm:text-sm border border-slate-300 rounded-lg focus:outline-hidden focus:ring-2 focus:ring-blue-500 bg-slate-50/50"
+            placeholder="e.g. Plan Unit 6 Levers with ruler & coins..."
+            className="flex-1 text-[13px] bg-transparent text-[#1d1d1f] placeholder:text-[#86868b] focus:outline-none"
           />
           <button
             id="btn-send-teacher-chat"
             type="submit"
             disabled={loading || !input.trim()}
-            className="p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors disabled:opacity-40 shadow-2xs"
+            className="w-8 h-8 flex items-center justify-center bg-[#0071e3] hover:bg-[#0077ed] text-white rounded-full transition-all disabled:opacity-30 disabled:hover:bg-[#0071e3] cursor-pointer active:scale-95 shadow-2xs"
             title="Send Message"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5" />
           </button>
         </form>
       </div>

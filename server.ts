@@ -2,14 +2,10 @@ import express, { Request, Response } from 'express';
 import path from 'path';
 import { GoogleGenAI, Type } from '@google/genai';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
 import { GRADE_8_CURRICULUM_UNITS, OFFICIAL_GRADE_8_LOS, CAMBRIDGE_LESSON_PLAN_PROMPT_TEMPLATE } from './src/data/curriculumData.ts';
 import { CambridgeLessonPlan } from './src/types.ts';
 
 dotenv.config();
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 const PORT = 3000;
 const app = express();
@@ -30,6 +26,29 @@ function getGenAI(): GoogleGenAI {
       },
     },
   });
+}
+
+// Resilient model cascade:
+// Primary: 'gemini-flash-latest' (Highest capacity, prevents 503 high-demand errors)
+// Secondary: 'gemini-3.1-flash-lite' (Ultra-fast, high-availability fallback)
+// Tertiary: 'gemini-3.8-flash'
+const ACTIVE_MODELS = ['gemini-flash-latest', 'gemini-3.1-flash-lite', 'gemini-3.8-flash'];
+
+async function generateContentWithFallback(ai: GoogleGenAI, params: { contents: any; config?: any }) {
+  let lastError: any = null;
+  for (const model of ACTIVE_MODELS) {
+    try {
+      const response = await ai.models.generateContent({
+        ...params,
+        model,
+      });
+      return response;
+    } catch (err: any) {
+      console.warn(`[Gemini Fallback] Model '${model}' encountered error: ${err?.message || err}. Attempting next available model...`);
+      lastError = err;
+    }
+  }
+  throw lastError;
 }
 
 // Curriculum metadata endpoint
@@ -63,6 +82,8 @@ app.post('/api/generate-lesson-plan', async (req: Request, res: Response) => {
       )
       .join('\n');
 
+    const cleanGradeStr = (classGrade || 'Grade 8').replace(/\s*\(.*?\)/g, '').replace(/[-–—]\s*[A-Za-z0-9]+/g, '').trim() || 'Grade 8';
+
     const prompt = `
 Generate a complete, practical, hands-on STEAM Lesson Plan strictly adhering to the Cambridge Lower Secondary template for Grade 8 Science and Technology.
 
@@ -72,8 +93,7 @@ Specified Topic: ${topic || unit.topics[0]}
 Additional Teacher Focus / Constraints: ${specificFocus || 'None specified'}
 Low Resource Priority: ${lowResourceFocus ? 'HIGH: Emphasize low-cost, zero-cost, locally available household/natural materials over expensive apparatus' : 'Standard classroom resources'}
 Duration: ${durationMinutes} minutes
-Target Class: ${classGrade}
-Date: ${date}
+Target Grade: ${cleanGradeStr}
 
 Official Learning Outcomes for this Unit (Select the most relevant 1-3 outcomes for this specific lesson):
 ${unitOutcomes.map(lo => `* [LO ${lo.id}]: ${lo.text}`).join('\n')}
@@ -93,8 +113,7 @@ Instructions:
 
     const ai = getGenAI();
 
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateContentWithFallback(ai, {
       contents: prompt,
       config: {
         systemInstruction: CAMBRIDGE_LESSON_PLAN_PROMPT_TEMPLATE + (customTemplate ? `\nUser Custom Template Preferences: ${customTemplate}` : ''),
@@ -246,6 +265,7 @@ Instructions:
 
     const parsedPlan: CambridgeLessonPlan = JSON.parse(response.text || '{}');
     parsedPlan.id = `plan-${Date.now()}`;
+    parsedPlan.classGrade = (parsedPlan.classGrade || 'Grade 8').replace(/\s*\(.*?\)/g, '').replace(/[-–—]\s*[A-Za-z0-9]+/g, '').trim() || 'Grade 8';
     // ensure wentWell and improveNextTime are tuples of length 2
     if (!Array.isArray(parsedPlan.summaryEvaluation.wentWell) || parsedPlan.summaryEvaluation.wentWell.length < 2) {
       parsedPlan.summaryEvaluation.wentWell = [
@@ -283,8 +303,7 @@ app.post('/api/chat', async (req: Request, res: Response) => {
     }
 
     const ai = getGenAI();
-    const response = await ai.models.generateContent({
-      model: 'gemini-3.8-flash',
+    const response = await generateContentWithFallback(ai, {
       contents: formattedContents,
       config: {
         systemInstruction,
